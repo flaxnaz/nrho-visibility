@@ -1,0 +1,10 @@
+Site,MinEl_deg,LOS_pct,TX_pct,SNR_pct
+Equator_23E,0,62.195,62.195,62.195
+SouthPole,0,53.073,53.073,53.073
+NorthPole,0,45.176,45.176,45.176
+Equator_23E,5,62.195,57.272,57.272
+SouthPole,5,53.073,49.796,49.796
+NorthPole,5,45.176,42.03,42.03
+Equator_23E,10,62.195,52.19,52.19
+SouthPole,10,53.073,46.414,46.414
+NorthPole,10,45.176,38.989,38.989
