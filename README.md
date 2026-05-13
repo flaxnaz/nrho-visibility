@@ -3,8 +3,7 @@
 Python tool for cis-lunar Near Rectilinear Halo Orbit (NRHO) visibility 
 and coverage analysis of lunar surface sites.
 
-Developed as part of MEng thesis research at UNSW Sydney (2025), supervised 
-by Prof. Andrew Dempster and Dr. Yang Yang (co-authors of the 
+Developed as part of MEng thesis research at UNSW Sydney (2025)\
 [HALO propagation framework](https://arxiv.org/abs/2403.xxxxx)).
 
 This tool is a Python port of a MATLAB/HALO pipeline used to analyse 
