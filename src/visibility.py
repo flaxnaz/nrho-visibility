@@ -16,15 +16,15 @@ class LinkBudget:
     S-band link budget parameters.
     Mirrors default_link() from MATLAB coverage_sweep_NRHO.m
     """
-    freq_hz:        float = 2.2e9       # S-band carrier [Hz]
-    ptx_dbw:        float = 10.0        # TX power [dBW] — 10W
-    gtx_dbi:        float = 5.0         # TX antenna gain [dBi]
-    grx_dbi:        float = 45.0        # RX dish gain [dBi]
-    tsys_k:         float = 500.0       # system noise temperature [K]
-    rb_bps:         float = 1000.0      # data rate [bps]
-    ebno_req_db:    float = 9.0         # required Eb/N0 [dB]
-    imp_margin_db:  float = 0.0         # implementation margin [dB]
-    misc_loss_db:   float = 2.0         # miscellaneous losses [dB]
+    freq_hz:        float = 2.2e9
+    ptx_dbw:        float = 10.0
+    gtx_dbi:        float = 5.0
+    grx_dbi:        float = 45.0
+    tsys_k:         float = 500.0
+    rb_bps:         float = 1000.0
+    ebno_req_db:    float = 9.0
+    imp_margin_db:  float = 0.0
+    misc_loss_db:   float = 2.0
 
 
 def link_margin_db(range_km: float, budget: LinkBudget) -> float:
@@ -49,22 +49,22 @@ def link_margin_db(range_km: float, budget: LinkBudget) -> float:
     c_dbw   = (budget.ptx_dbw + budget.gtx_dbi
                + budget.grx_dbi - lfs_db - budget.misc_loss_db)
 
-    k_db    = -228.6                              # Boltzmann [dBW/Hz/K]
+    k_db    = -228.6
     n0_dbw  = k_db + 10 * np.log10(budget.tsys_k)
 
     cno     = c_dbw - n0_dbw
     ebno_db = cno - 10 * np.log10(budget.rb_bps)
     margin  = ebno_db - budget.ebno_req_db - budget.imp_margin_db
 
-    return margin
+    return float(margin)
 
 
-def los_visibility_link(r_sc:      np.ndarray,
-                         lat_deg:   float,
-                         lon_deg:   float,
+def los_visibility_link(r_sc:       np.ndarray,
+                         lat_deg:    float,
+                         lon_deg:    float,
                          min_el_deg: float = 10.0,
-                         r_moon:    float = 1737.4,
-                         budget:    LinkBudget = None
+                         r_moon:     float = 1737.4,
+                         budget:     LinkBudget = None
                          ) -> tuple[bool, bool, bool, float]:
     """
     Compute LOS, TX-gated, and SNR-gated visibility.
@@ -87,36 +87,38 @@ def los_visibility_link(r_sc:      np.ndarray,
 
     Returns
     -------
-    vis_los : bool   — geometric LOS above horizon
-    vis_tx  : bool   — LOS and above elevation mask
-    vis_snr : bool   — vis_tx and link margin > 0
-    el_deg  : float  — elevation angle [deg]
+    vis_los : bool
+    vis_tx  : bool
+    vis_snr : bool
+    el_deg  : float
     """
     r_sc = np.asarray(r_sc, dtype=float).flatten()
 
     r_site, n_local = moon_fixed_to_inertial(lat_deg, lon_deg, r_moon)
-    el_deg          = site_elevation_angle(r_sc, r_site, n_local)
+    el_deg = site_elevation_angle(r_sc, r_site, n_local)
 
-    vis_los = el_deg > 0.0
-    vis_tx  = vis_los and (el_deg >= min_el_deg)
+    vis_los = bool(el_deg > 0.0)
+    vis_tx  = bool(vis_los and (el_deg >= min_el_deg))
 
     if budget is None or not vis_tx:
         vis_snr = vis_tx
     else:
         range_km = float(np.linalg.norm(r_sc - r_site))
-        margin   = link_margin_db(range_km, budget)
-        vis_snr  = vis_tx and (margin > 0.0)
+        if range_km < 1.0:
+            vis_snr = vis_tx
+        else:
+            margin  = link_margin_db(range_km, budget)
+            vis_snr = bool(vis_tx and (margin > 0.0))
 
-    return vis_los, vis_tx, vis_snr, el_deg
+    return vis_los, vis_tx, vis_snr, float(el_deg)
 
 
 if __name__ == "__main__":
-    # Quick self-test — spacecraft directly above Equator_23E
     import numpy as np
     from moon_geometry import moon_fixed_to_inertial
 
     r_site, _ = moon_fixed_to_inertial(0.0, 23.0)
-    r_sc_overhead = r_site * 40.0          # 40x lunar radius above site
+    r_sc_overhead = r_site * 40.0
 
     budget = LinkBudget()
 
@@ -137,6 +139,5 @@ if __name__ == "__main__":
         print(f"{name:15s}  el={el:6.2f} deg  "
               f"LOS={int(los)}  TX={int(tx)}  SNR={int(snr)}")
 
-    # Test link margin function
     margin = link_margin_db(60000.0, budget)
     print(f"\nLink margin at 60,000 km: {margin:.2f} dB")
