@@ -15,7 +15,13 @@ surface sites, supporting Artemis-era mission planning.
 ---
 
 ## Results
+<<<<<<< HEAD
 ![NRHO Mission Dashboard](figures/nrho_dashboard_clean.png)
+=======
+
+![NRHO Mission Dashboard](figures/nrho_dashboard_clean.png)
+
+>>>>>>> f231fcf7404036df4d2e9fd303832769ad72eac2
 ### NRHO Trajectory — Moon-Centred Inertial Frame
 ![NRHO Orbit](figures/nrho_orbit.png)
 
