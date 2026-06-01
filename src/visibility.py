@@ -64,7 +64,7 @@ def los_visibility_link(r_sc:       np.ndarray,
                          lon_deg:    float,
                          min_el_deg: float = 10.0,
                          r_moon:     float = 1737.4,
-                         budget:     LinkBudget = None
+                         budget:     LinkBudget | None = None
                          ) -> tuple[bool, bool, bool, float]:
     """
     Compute LOS, TX-gated, and SNR-gated visibility.

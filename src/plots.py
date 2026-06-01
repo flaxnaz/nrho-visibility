@@ -99,7 +99,7 @@ def plot_visibility_timeseries(t:          np.ndarray,
                                 X:          np.ndarray,
                                 min_el_deg: float = 10.0,
                                 r_moon:     float = 1737.4,
-                                budget:     LinkBudget = None,
+                                budget:     LinkBudget | None = None,
                                 save_path:  str = "figures/visibility.png"):
     """
     LOS / TX / SNR visibility vs time for all three sites.

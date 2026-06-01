@@ -27,14 +27,14 @@ DEFAULT_SITES = [
     SurfaceSite("NorthPole",    89.9,   0.0),
 ]
 
-DEFAULT_MASKS = [0, 5, 10]    # elevation masks [deg]
+DEFAULT_MASKS: list[float] = [0.0, 5.0, 10.0]
 
 
 def coverage_sweep(X:          np.ndarray,
-                   sites:      List[SurfaceSite] = None,
-                   masks_deg:  List[float]        = None,
+                   sites:      list[SurfaceSite] | None = None,
+masks_deg:  list[float]        | None = None,
+budget:     LinkBudget         | None = None,
                    r_moon:     float              = 1737.4,
-                   budget:     LinkBudget         = None,
                    verbose:    bool               = True
                    ) -> pd.DataFrame:
     """
