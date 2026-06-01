@@ -1,3 +1,5 @@
+![Tests](https://github.com/flaxnaz/nrho-visibility/actions/workflows/test.yml/badge.svg)
+
 # NRHO Visibility Analysis Tool
 
 Python tool for cis-lunar Near Rectilinear Halo Orbit (NRHO) visibility 
